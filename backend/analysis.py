@@ -5,7 +5,7 @@ from langchain_core.prompts import PromptTemplate
 
 # Set up Groq API key
 load_dotenv()  # Load environment variables from .env file
-os.environ["GROQ_API_KEY"] = os.getenv("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")  # Set the Groq API key from environment variables
+os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")  # Set the Groq API key from environment variables
 
 # Initialize the ChatGroq model with the specified model name
 llm = ChatGroq(model_name="mistral-saba-24b")
