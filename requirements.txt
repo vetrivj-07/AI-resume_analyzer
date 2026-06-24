@@ -1,7 +1,13 @@
 streamlit
-langchain_community
-langchain-huggingface
-langchain-groq
 pypdf
 faiss-cpu
 python-dotenv
+sentence-transformers
+torch
+
+langchain==0.2.17
+langchain-community==0.2.19
+langchain-core==0.2.43
+langchain-text-splitters==0.2.4
+langchain-groq==0.1.9
+langchain-huggingface==0.0.3
