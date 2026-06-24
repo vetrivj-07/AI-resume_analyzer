@@ -1,17 +1,26 @@
 import os
+import streamlit as st
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 
-# Set up Groq API key
-load_dotenv()  # Load environment variables from .env file
-os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")  # Set the Groq API key from environment variables
+# Load environment variables
+load_dotenv()
 
-# Initialize the ChatGroq model with the specified model name
+# Get Groq API key from Streamlit Secrets or environment variables
+groq_api_key = st.secrets.get("GROQ_API_KEY", None) or os.getenv("GROQ_API_KEY")
+
+if not groq_api_key:
+    st.error("GROQ_API_KEY is missing. Add it in Streamlit Cloud Secrets.")
+    st.stop()
+
+os.environ["GROQ_API_KEY"] = groq_api_key
+
+# Initialize the ChatGroq model
 llm = ChatGroq(model_name="mistral-saba-24b")
 
+
 def analyze_resume(full_resume, job_description):
-    # Template for analyzing the resume against the job description
     template = """
     You are an AI assistant specialized in resume analysis and recruitment. Analyze the given resume and compare it with the job description. 
     
@@ -36,16 +45,17 @@ def analyze_resume(full_resume, job_description):
 
     Analysis:
     """
-    prompt = PromptTemplate(  # Create a prompt template with input variables
+
+    prompt = PromptTemplate(
         input_variables=["resume", "job_description"],
         template=template
     )
 
-    # Create a chain combining the prompt and the language model
     chain = prompt | llm
 
-    # Invoke the chain with input data
-    response = chain.invoke({"resume": full_resume, "job_description": job_description})
+    response = chain.invoke({
+        "resume": full_resume,
+        "job_description": job_description
+    })
 
-    # Return the content of the response
     return response.content
